@@ -21,11 +21,10 @@ public class Main {
           // Wait for connection from client.
           clientSocket = serverSocket.accept();
           while (true){
-
-              byte[] input= new byte[1024];
+              byte[] input = new byte[1024];
               clientSocket.getInputStream().read(input);
-              String stringInput = new String(input).trim();
-              System.out.println("Received: " + stringInput);
+              String inputString = new String(input).trim();
+              System.out.println("Received: " + inputString);
               clientSocket.getOutputStream().write("+PONG\r\n".getBytes());
           }
         } catch (IOException e) {
