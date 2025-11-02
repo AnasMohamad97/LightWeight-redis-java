@@ -21,7 +21,7 @@ public class Main {
           // Wait for connection from client.
           clientSocket = serverSocket.accept();
           while (true){
-              
+
               byte[] input= new byte[1024];
               clientSocket.getInputStream().read(input);
               String stringInput = new String(input).trim();
