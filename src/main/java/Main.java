@@ -1,5 +1,4 @@
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -20,13 +19,19 @@ public class Main {
           serverSocket.setReuseAddress(true);
           // Wait for connection from client.
           clientSocket = serverSocket.accept();
-          while (true){
-
-              byte[] input = new byte[1024];
-              clientSocket.getInputStream().read(input);
-              String inputString = new String(input).trim();
-              System.out.println("Received: " + inputString);
-              clientSocket.getOutputStream().write("+PONG\r\n".getBytes());
+          BufferedReader reader =new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // read from socket
+          BufferedWriter writer =new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream())); // write to the socket
+          while(true){
+              new Thread(()->{
+                  try {
+                      if(reader.readLine().equals("PING")){
+                          writer.write("+PONG\r\n");
+                          writer.flush();
+                      }
+                  } catch (IOException e) {
+                      throw new RuntimeException(e);
+                  }
+              });
           }
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
