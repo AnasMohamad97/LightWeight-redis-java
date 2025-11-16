@@ -23,7 +23,7 @@ public class ConnectionHandler implements Runnable {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 if("PING".equals(inputLine)){
-                    out.println("+PONG\r\n");
+                    out.print("+PONG\r\n");
                     out.flush();
                 }
             }
