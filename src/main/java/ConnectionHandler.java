@@ -17,7 +17,6 @@ public class ConnectionHandler implements Runnable {
     public void run() {
         // flushes after every print call
         PrintWriter out = null;
-
         BufferedReader in = null;
         // buffered reader automatically handle line breaks
 
