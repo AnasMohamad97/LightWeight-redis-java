@@ -6,7 +6,6 @@ public class RespEncoder {
 
     public String encode(ArrayList<String> commands) {
         String firstCommand = commands.get(0);
-
         switch (firstCommand) {
             case "PING":
                 return "+PONG\r\n";
