@@ -13,7 +13,7 @@ public class RespEncoder {
                 int len  = commands.get(1).length();
                 return "$" + len + "\r\n" + commands.get(1) + "\r\n";
             default:
-                return "";
+                return "$-1\r\n";
         }
     }
 

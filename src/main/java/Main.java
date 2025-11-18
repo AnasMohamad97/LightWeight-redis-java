@@ -29,7 +29,6 @@ public class Main {
 
                Socket clientSocket = serverSocket.accept();
               threadPool.submit(new ConnectionHandler(clientSocket));
-              clientSocket.close();
           }
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());

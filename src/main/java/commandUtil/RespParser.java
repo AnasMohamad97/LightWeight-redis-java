@@ -19,6 +19,10 @@ public class RespParser {
             case "ECHO":
                 response = new ArrayList<>(Arrays.asList(strings));
                 break;
+            case "COMMAND":
+                // redis-cli sends this on connection - just return empty array
+                response.add("");
+                break;
             default:
                 response.add(firstCommand);
         }

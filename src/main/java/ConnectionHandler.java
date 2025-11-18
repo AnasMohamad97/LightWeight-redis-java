@@ -26,9 +26,10 @@ public class ConnectionHandler implements Runnable {
             in = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
             RespParser respParser = new RespParser();
             RespEncoder respEncoder = new RespEncoder();
-            String inputLine;
+            String  inputLine;
 
             while ((inputLine = in.readLine()) != null) {
+
                ArrayList<String> commands = respParser.parse(inputLine);
                String encodedCommand = respEncoder.encode(commands);
                out.write(encodedCommand);
