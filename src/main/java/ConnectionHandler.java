@@ -19,7 +19,6 @@ public class ConnectionHandler implements Runnable {
         PrintWriter out = null;
         BufferedReader in = null;
         // buffered reader automatically handle line breaks
-
         try {
 
             out = new PrintWriter(client.getOutputStream(), true , StandardCharsets.UTF_8);
@@ -27,6 +26,7 @@ public class ConnectionHandler implements Runnable {
             RespParser respParser = new RespParser();
             RespEncoder respEncoder = new RespEncoder();
             String inputLine;
+
             while ((inputLine = in.readLine()) != null) {
                ArrayList<String> commands = respParser.parse(inputLine);
                String encodedCommand = respEncoder.encode(commands);

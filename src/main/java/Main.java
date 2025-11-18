@@ -20,15 +20,14 @@ public class Main {
         int port = 6379;
 
         ExecutorService threadPool = Executors.newCachedThreadPool();
-        try {
-          serverSocket = new ServerSocket(port);
-          serverSocket.setReuseAddress(true);
 
-        } catch (IOException e) {
-          System.out.println("IOException: " + e.getMessage());
-        } try {
-          while (!Thread.currentThread().isInterrupted()) {
-              clientSocket = serverSocket.accept(); // connect to the server
+         try {
+
+             serverSocket = new ServerSocket(port);
+             serverSocket.setReuseAddress(true);
+             clientSocket = serverSocket.accept(); // connect to the server
+
+             while (!Thread.currentThread().isInterrupted()) {
               threadPool.submit(new ConnectionHandler(clientSocket));
           }
         } catch (IOException e) {
