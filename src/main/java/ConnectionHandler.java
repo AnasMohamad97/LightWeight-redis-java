@@ -5,6 +5,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ConnectionHandler implements Runnable {
     private final Socket client ;
@@ -30,6 +31,7 @@ public class ConnectionHandler implements Runnable {
             while ((inputLine = in.readLine()) != null) {
                ArrayList<String> commands = respParser.parse(inputLine);
                String encodedCommand = respEncoder.encode(commands);
+               System.out.println(encodedCommand);
                out.write(encodedCommand);
             }
         }catch (IOException e){
