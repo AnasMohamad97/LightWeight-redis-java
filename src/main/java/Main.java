@@ -16,30 +16,32 @@ public class Main {
 
       //Uncomment the code below to pass the first stage
         ServerSocket serverSocket = null;
-        Socket clientSocket = null;
         int port = 6379;
 
         ExecutorService threadPool = Executors.newCachedThreadPool();
 
          try {
-
              serverSocket = new ServerSocket(port);
              serverSocket.setReuseAddress(true);
-             clientSocket = serverSocket.accept(); // connect to the server
-
+            // connect to the server
+           //  System.out.println("Waiting for connection...");
              while (!Thread.currentThread().isInterrupted()) {
+
+               Socket clientSocket = serverSocket.accept();
               threadPool.submit(new ConnectionHandler(clientSocket));
+              clientSocket.close();
           }
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());
-      } finally {
-          try {
-            if (clientSocket != null) {
-              clientSocket.close();
-            }
-          } catch (IOException e) {
-            System.out.println("IOException: " + e.getMessage());
-          }
-        }
+      }finally {
+             try {
+                 if (serverSocket != null) {
+                     serverSocket.close();
+                 }
+                 threadPool.shutdown();
+             } catch (IOException e) {
+                 System.out.println("IOException: " + e.getMessage());
+             }
+         }
   }
 }

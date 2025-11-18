@@ -31,7 +31,6 @@ public class ConnectionHandler implements Runnable {
             while ((inputLine = in.readLine()) != null) {
                ArrayList<String> commands = respParser.parse(inputLine);
                String encodedCommand = respEncoder.encode(commands);
-               System.out.println(encodedCommand);
                out.write(encodedCommand);
             }
         }catch (IOException e){
