@@ -9,7 +9,7 @@ public class RespParser {
     public ArrayList<String> parse(String inputLine) {
 
         ArrayList<String> response = new ArrayList<>();
-        strings = inputLine.split("");
+        strings = inputLine.split(" ");
         String firstCommand = strings[0];
 
         switch (firstCommand.toUpperCase()) {
