@@ -76,7 +76,9 @@ public class ConnectionHandler implements Runnable {
                 break;
             case "GET":
                 if(keyValueMap.containsKey(command[1])){
-                    String response ="+"+keyValueMap.get(command[1])+"\r\n";
+                    String value = keyValueMap.get(command[1]);
+                    String response ="$"+value.length()+"\r\n"+value+"\r\n";
+                    System.out.println(response);
                     out.write(response.getBytes(StandardCharsets.UTF_8));
                     out.flush();
                 }else {
