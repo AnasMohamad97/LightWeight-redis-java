@@ -65,15 +65,19 @@ public class ConnectionHandler implements Runnable {
                 }break;
             case "RPUSH":
                 if(command.length>1){
-                    CachKey cachKey=new CachKey(command[1],command[2]);
-                    if(ListKeyMap.containsKey(cachKey.getKey())){
-                        ListKeyMap.get(cachKey.getKey()).add(cachKey);
+                    String listKey = command[1];
+                    CachKey cachKey=new CachKey(listKey,command[2]);
+                    if(ListKeyMap.containsKey(listKey)){
+                        ListKeyMap.get(listKey).add(cachKey);
                     }else {
                         ArrayList<CachKey> list=new ArrayList<>();
                         list.add(cachKey);
-                        ListKeyMap.put(cachKey.getKey(),list);
+                        ListKeyMap.put(listKey,list);
                     }
-                    int listSize = ListKeyMap.get(cachKey.getKey()).size();
+                    for(int i = 3 ; i < command.length ; ++i){
+                        ListKeyMap.get(listKey).add(cachKey);
+                    }
+                    int listSize = ListKeyMap.get(listKey).size();
                     out.write((":"+listSize+"\r\n").getBytes(StandardCharsets.UTF_8));
                     out.flush();
                     //:1\r\n
