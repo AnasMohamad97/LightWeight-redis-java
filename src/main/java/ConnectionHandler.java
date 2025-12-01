@@ -4,16 +4,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class ConnectionHandler implements Runnable {
     private final Socket client ;
     private final HashMap<String,CachKey> keyValueMap;
+    private final HashMap<String , ArrayList<CachKey>>ListKeyMap;
 
 
     public  ConnectionHandler(Socket client) throws IOException {
         this.client=client;
         keyValueMap=new HashMap<>();
+        ListKeyMap=new HashMap<>();
       }
     @Override
     public void run() {
@@ -60,6 +63,25 @@ public class ConnectionHandler implements Runnable {
                     out.write(response.getBytes(StandardCharsets.UTF_8));
                     out.flush();
                 }break;
+            case "RPUSH":
+                if(command.length>1){
+                    CachKey cachKey=new CachKey(command[1],command[2]);
+                    if(ListKeyMap.containsKey(cachKey.getKey())){
+                        ListKeyMap.get(cachKey.getKey()).add(cachKey);
+                    }else {
+                        ArrayList<CachKey> list=new ArrayList<>();
+                        list.add(cachKey);
+                        ListKeyMap.put(cachKey.getKey(),list);
+                    }
+                    int listSize = ListKeyMap.get(cachKey.getKey()).size();
+                    out.write((":"+listSize+"\r\n").getBytes(StandardCharsets.UTF_8));
+                    out.flush();
+                    //:1\r\n
+                }else {
+                    out.write("-ERR unknown command\r\n".getBytes());
+                    out.flush();
+                }break;
+
             case "COMMAND":
                 //redis-cli sends this on connection - just return empty array
                 out.write("*0\r\n".getBytes());
