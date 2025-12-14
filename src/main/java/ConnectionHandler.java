@@ -20,7 +20,7 @@ public class ConnectionHandler implements Runnable {
       }
     @Override
     public void run() {
-        // flushes after every print call
+        //flushes after every print call
         OutputStream out = null;
         BufferedReader in = null;
         // buffered reader automatically handle line breaks
@@ -75,6 +75,7 @@ public class ConnectionHandler implements Runnable {
                         ListKeyMap.put(listKey,list);
                     }
                     for(int i = 3 ; i < command.length ; ++i){
+                        cachKey=new CachKey(listKey,command[i]);
                         ListKeyMap.get(listKey).add(cachKey);
                     }
                     int listSize = ListKeyMap.get(listKey).size();
@@ -85,7 +86,6 @@ public class ConnectionHandler implements Runnable {
                     out.write("-ERR unknown command\r\n".getBytes());
                     out.flush();
                 }break;
-
             case "COMMAND":
                 //redis-cli sends this on connection - just return empty array
                 out.write("*0\r\n".getBytes());
@@ -116,6 +116,31 @@ public class ConnectionHandler implements Runnable {
                     out.flush();
                 }else {
                     out.write("$-1\r\n".getBytes(StandardCharsets.UTF_8));
+                    out.flush();
+                }
+                break;
+            case "LRANGE":
+                if(command.length > 1 ) {
+                    String listKey = command[1];
+                    int start =  Integer.parseInt(command[2]);
+                    int end =  Integer.parseInt(command[3]);
+                    if(!ListKeyMap.containsKey(listKey) || ListKeyMap.get(listKey).isEmpty() || start > end || start >  ListKeyMap.get(listKey).size()  ) {
+                        String  emptyArray = "*0\r\n";
+                        System.out.println(emptyArray);
+                        out.write(emptyArray.getBytes(StandardCharsets.UTF_8));
+                        out.flush();
+                    }else {
+                        end = (end >= ListKeyMap.get(listKey).size()) ? ListKeyMap.get(listKey).size()-1 : end;
+                        List<CachKey> list = ListKeyMap.get(listKey).subList(start, end);
+
+                        out.write(("*"+list.size()+"\r\n").getBytes(StandardCharsets.UTF_8));
+                        for(int i = start ; i < end ; ++i ) {
+                            out.write(("$" + list.get(i).getValue().length() + "\r\n" + list.get(i).getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
+                        }
+                        out.flush();
+                    }
+                }else {
+                    out.write("-ERR wrong number of arguments\r\n".getBytes());
                     out.flush();
                 }
                 break;
