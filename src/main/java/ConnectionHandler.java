@@ -130,11 +130,11 @@ public class ConnectionHandler implements Runnable {
                         out.write(emptyArray.getBytes(StandardCharsets.UTF_8));
                         out.flush();
                     }else {
-                        end = (end >= ListKeyMap.get(listKey).size()) ? ListKeyMap.get(listKey).size()-1 : end;
-                        List<CachKey> list = ListKeyMap.get(listKey).subList(start, end);
+                        end = (end >= ListKeyMap.get(listKey).size()) ? ListKeyMap.get(listKey).size() : end;
+                        List<CachKey> list = ListKeyMap.get(listKey);
 
                         out.write(("*"+list.size()+"\r\n").getBytes(StandardCharsets.UTF_8));
-                        for(int i = start ; i < end ; ++i ) {
+                        for(int i = start ; i <= end ; ++i ) {
                             out.write(("$" + list.get(i).getValue().length() + "\r\n" + list.get(i).getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
                         }
                         out.flush();
