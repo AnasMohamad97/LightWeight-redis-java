@@ -133,9 +133,11 @@ public class ConnectionHandler implements Runnable {
                         end = Math.min(end, ListKeyMap.get(listKey).size());
                         List<CachKey> list = ListKeyMap.get(listKey).subList(start, end+1);
 
-                        out.write(("*"+list.size()+"\r\n").getBytes(StandardCharsets.UTF_8));
-                        for(int i = start ; i <= end ; ++i ) {
-                            out.write(("$" + list.get(i).getValue().length() + "\r\n" + list.get(i).getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
+                        out.write(("*"+(end-start+1)+"\r\n").getBytes(StandardCharsets.UTF_8));
+                        System.out.println("*"+(end-start+1)+"\r\n");
+                        for (CachKey cachKey : list) {
+                            out.write(("$" + cachKey.getValue().length() + "\r\n" + cachKey.getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
+                            System.out.println(cachKey.getValue().length() + "\r\n" + cachKey.getValue() + "\r\n");
                         }
                         out.flush();
                     }
