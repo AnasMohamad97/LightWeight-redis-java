@@ -124,17 +124,17 @@ public class ConnectionHandler implements Runnable {
                     String listKey = command[1];
                     int start =  Integer.parseInt(command[2]);
                     int end =  Integer.parseInt(command[3]);
-                    if(!ListKeyMap.containsKey(listKey) || ListKeyMap.get(listKey).isEmpty() || start > end || start >  ListKeyMap.get(listKey).size()  ) {
+                    if(!ListKeyMap.containsKey(listKey) || ListKeyMap.get(listKey).isEmpty() || start > end || start >  ListKeyMap.get(listKey).size() ) {
                         String  emptyArray = "*0\r\n";
                         System.out.println(emptyArray);
                         out.write(emptyArray.getBytes(StandardCharsets.UTF_8));
                         out.flush();
                     }else {
-                        end = Math.min(end, ListKeyMap.get(listKey).size());
-                        List<CachKey> list = ListKeyMap.get(listKey).subList(start, end+1);
+                        end = Math.min(end+1, ListKeyMap.get(listKey).size());
+                        List<CachKey> list = ListKeyMap.get(listKey).subList(start, end);
 
-                        out.write(("*"+(end-start+1)+"\r\n").getBytes(StandardCharsets.UTF_8));
-                        System.out.println("*"+(end-start+1)+"\r\n");
+                        out.write(("*"+Math.min(list.size(),(end-start+1))+"\r\n").getBytes(StandardCharsets.UTF_8));
+                        System.out.println("*"+Math.min(list.size(),(end-start+1))+"\r\n");
                         for (CachKey cachKey : list) {
                             out.write(("$" + cachKey.getValue().length() + "\r\n" + cachKey.getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
                             System.out.println(cachKey.getValue().length() + "\r\n" + cachKey.getValue() + "\r\n");
