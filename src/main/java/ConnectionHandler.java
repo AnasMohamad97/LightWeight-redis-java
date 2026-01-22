@@ -11,12 +11,13 @@ public class ConnectionHandler implements Runnable {
     private final Socket client ;
     private final HashMap<String,CachKey> keyValueMap;
     private final HashMap<String , ArrayList<CachKey>>ListKeyMap;
-
+    private final RespEncoder  encoder;
 
     public  ConnectionHandler(Socket client) throws IOException {
         this.client=client;
         keyValueMap=new HashMap<>();
         ListKeyMap=new HashMap<>();
+        encoder = new RespEncoder(client.getOutputStream());
       }
     @Override
     public void run() {
@@ -54,15 +55,15 @@ public class ConnectionHandler implements Runnable {
 
         switch (cmd){
             case "PING":
-                out.write(("+PONG\r\n".getBytes(StandardCharsets.UTF_8)));
-                out.flush();
+                encoder.pong();
+                encoder.flush();
                 break;
             case "ECHO":
                 if(command.length>1){
-                    String response = "$" + command[1].length() + "\r\n" + command[1] + "\r\n";
-                    out.write(response.getBytes(StandardCharsets.UTF_8));
-                    out.flush();
-                }break;
+                    encoder.WriteBulkString(command[1]);
+                    encoder.flush();
+                }
+                break;
             case "RPUSH":
                 if(command.length>1){
                     String listKey = command[1];
@@ -79,17 +80,17 @@ public class ConnectionHandler implements Runnable {
                         ListKeyMap.get(listKey).add(cachKey);
                     }
                     int listSize = ListKeyMap.get(listKey).size();
-                    out.write((":"+listSize+"\r\n").getBytes(StandardCharsets.UTF_8));
-                    out.flush();
+                    encoder.WriteInteger(listSize);
+                    encoder.flush();
                     //:1\r\n
                 }else {
-                    out.write("-ERR unknown command\r\n".getBytes());
-                    out.flush();
+                    encoder.errUnknownCommand();
+                    encoder.flush();
                 }break;
             case "COMMAND":
                 //redis-cli sends this on connection - just return empty array
-                out.write("*0\r\n".getBytes());
-                out.flush();
+                encoder.writeArrayHeader(0);
+                encoder.flush();
                 break;
             case "SET":
                 if(command.length ==3 ){
@@ -101,55 +102,53 @@ public class ConnectionHandler implements Runnable {
                     CachKey newCachedValue = new CachKey(command[1],command[2] , timeLimit);
                     keyValueMap.put(command[1], newCachedValue);
                 }else {
-                    out.write("-ERR unknown command\r\n".getBytes());
-                    out.flush();
+                    encoder.errUnknownCommand();
                     break;
                 }
-                out.write(("+OK\r\n".getBytes(StandardCharsets.UTF_8)));
-                out.flush();
+                encoder.ok();
+                encoder.flush();
                 break;
             case "GET":
                 if(keyValueMap.containsKey(command[1]) && keyValueMap.get(command[1]).getValue()!=null) {
                     String value = keyValueMap.get(command[1]).value;
-                    String response ="$"+value.length()+"\r\n"+value+"\r\n";
-                    out.write(response.getBytes(StandardCharsets.UTF_8));
-                    out.flush();
+                    encoder.WriteBulkString(value);
+                    encoder.flush();
                 }else {
-                    out.write("$-1\r\n".getBytes(StandardCharsets.UTF_8));
-                    out.flush();
+                   encoder.writeNullBulkString();
+                   encoder.flush();
                 }
                 break;
             case "LRANGE":
-                if(command.length > 1 ) {
+                if(command.length == 4) {
                     String listKey = command[1];
                     int start =  Integer.parseInt(command[2]);
                     int end =  Integer.parseInt(command[3]);
                     if(!ListKeyMap.containsKey(listKey) || ListKeyMap.get(listKey).isEmpty() || start > end || start >  ListKeyMap.get(listKey).size() ) {
-                        String  emptyArray = "*0\r\n";
-                        System.out.println(emptyArray);
-                        out.write(emptyArray.getBytes(StandardCharsets.UTF_8));
-                        out.flush();
+
+                        encoder.writeArrayHeader(0); // emptyArray = "*0\r\n";
+                        encoder.flush();
                     }else {
                         end = Math.min(end+1, ListKeyMap.get(listKey).size());
                         List<CachKey> list = ListKeyMap.get(listKey).subList(start, end);
 
-                        out.write(("*"+Math.min(list.size(),(end-start+1))+"\r\n").getBytes(StandardCharsets.UTF_8));
+                        //out.write(("*"+Math.min(list.size(),(end-start+1))+"\r\n").getBytes(StandardCharsets.UTF_8));
+                       // encoder.writeArrayHeader(Math.min(list.size(),(end-start+1)));
                         System.out.println("*"+Math.min(list.size(),(end-start+1))+"\r\n");
-                        for (CachKey cachKey : list) {
-                            out.write(("$" + cachKey.getValue().length() + "\r\n" + cachKey.getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
-                            System.out.println(cachKey.getValue().length() + "\r\n" + cachKey.getValue() + "\r\n");
-                        }
+                        encoder.WriteBulkArray(list);
+//                        for (CachKey cachKey : list) {
+//                            encoder.WriteBulkString(cachKey.getValue());
+//                            //out.write(("$" + cachKey.getValue().length() + "\r\n" + cachKey.getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
+//                            System.out.println(cachKey.getValue().length() + "\r\n" + cachKey.getValue() + "\r\n");
+//                        }
                         out.flush();
                     }
                 }else {
-                    out.write("-ERR wrong number of arguments\r\n".getBytes());
-                    out.flush();
+                    encoder.errWrongNumArgs();
                 }
                 break;
             default:
                 // Unknown command - return error
-                out.write("-ERR unknown command\r\n".getBytes());
-                out.flush();
+                encoder.errUnknownCommand();
                 break;
 
         }
