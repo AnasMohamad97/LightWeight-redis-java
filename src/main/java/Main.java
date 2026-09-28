@@ -11,14 +11,13 @@ public class Main {
 
 
   public static void main(String[] args){
-    // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.out.println("Logs from your program will appear here!");
 
-      //Uncomment the code below to pass the first stage
         ServerSocket serverSocket = null;
         int port = 6379;
 
         ExecutorService threadPool = Executors.newCachedThreadPool();
+        CommandRegistry commandRegistry = CommandRegistry.defaultRegistry();
 
          try {
              serverSocket = new ServerSocket(port);
@@ -28,7 +27,7 @@ public class Main {
              while (!Thread.currentThread().isInterrupted()) {
 
                Socket clientSocket = serverSocket.accept();
-              threadPool.submit(new ConnectionHandler(clientSocket));
+              threadPool.submit(new ConnectionHandler(clientSocket,commandRegistry));
           }
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());

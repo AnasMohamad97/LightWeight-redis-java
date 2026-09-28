@@ -15,13 +15,14 @@ public class RespEncoder {
     private static final char BULK_STRING = '$';
     private static final char ARRAY = '*';
 
-    private final OutputStream out;
+    private OutputStream out;
 
     public RespEncoder(OutputStream out) {
         this.out = out;
     }
-
-
+    void setOutputStream(OutputStream out) {
+        this.out = out;
+    }
     public RespEncoder writeSimpleString(String str) throws IOException {
         out.write(SIMPLE_STRING);
         out.write(str.getBytes(StandardCharsets.UTF_8));
@@ -48,7 +49,6 @@ public class RespEncoder {
     // Write an array header (e.g., "*3\r\n")
     public RespEncoder writeArrayHeader(int arraySize) throws IOException {
         out.write(ARRAY);
-        out.write(CRLF_BYTES);
         out.write(String.valueOf(arraySize).getBytes(StandardCharsets.UTF_8));
         out.write(CRLF_BYTES);
         return this;
@@ -80,12 +80,10 @@ public class RespEncoder {
         if(values == null) {
             return writeNullBulkString();
         }
-        out.write(BULK_STRING);
         writeArrayHeader(values.length);
         for(String value : values) {
-            out.write(SIMPLE_STRING);
+            WriteBulkString(value);
         }
-        out.write(CRLF_BYTES);
         return this;
     }
     public RespEncoder ok() throws IOException {
