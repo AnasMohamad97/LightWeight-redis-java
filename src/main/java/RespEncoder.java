@@ -22,7 +22,6 @@ public class RespEncoder {
         this.out = out;
     }
 
-
     public RespEncoder writeSimpleString(String str) throws IOException {
         out.write(SIMPLE_STRING);
         out.write(str.getBytes(StandardCharsets.UTF_8));
@@ -108,8 +107,8 @@ public class RespEncoder {
         return writeError("ERR unknown command").flush();
     }
 
-    public RespEncoder errWrongNumArgs() throws IOException {
-        return writeError("\"-ERR wrong number of arguments").flush();
+    public RespEncoder errWrongNumArgs(String command) throws IOException {
+        return writeError("ERR wrong number of arguments for '" + command + "' command").flush();
     }
 
     public RespEncoder errSyntax() throws IOException {
