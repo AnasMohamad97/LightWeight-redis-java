@@ -9,9 +9,9 @@ public class RpushCommand implements Command {
             return;
         }
         String listKey = args[1];
-        ArrayList<CachKey> list = ctx.listKeyMap().computeIfAbsent(listKey, k -> new ArrayList<>());
+        ArrayList<CacheKey> list = ctx.listKeyMap().computeIfAbsent(listKey, k -> new ArrayList<>());
         for (int i = 2; i < args.length; i++) {
-            list.add(new CachKey(listKey, args[i]));
+            list.add(new CacheKey(listKey, args[i]));
         }
         ctx.encoder().WriteInteger(list.size()).flush();
     }

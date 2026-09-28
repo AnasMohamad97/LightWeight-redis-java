@@ -2,15 +2,13 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 
 public class ConnectionHandler implements Runnable {
     private final Socket client ;
-    private final HashMap<String,CachKey> keyValueMap;
-    private final HashMap<String , ArrayList<CachKey>>ListKeyMap;
+    private final HashMap<String, CacheKey> keyValueMap;
+    private final HashMap<String , ArrayList<CacheKey>>ListKeyMap;
     private OutputStream out;
     private BufferedReader in;
     CommandRegistry commandRegistry;

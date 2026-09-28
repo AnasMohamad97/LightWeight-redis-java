@@ -85,12 +85,12 @@ public class RespEncoder {
         }
         return this;
     }
-    public RespEncoder WriteBulkArray(List<CachKey> values) throws IOException {
+    public RespEncoder WriteBulkArray(List<CacheKey> values) throws IOException {
         if(values == null) {
             return writeNullBulkString();
         }
         writeArrayHeader(values.size());
-        for(CachKey value : values) {
+        for(CacheKey value : values) {
             WriteBulkString(value.value);
         }
         return this;

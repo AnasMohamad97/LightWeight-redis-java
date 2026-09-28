@@ -1,15 +1,15 @@
-public class CachKey {
+public class CacheKey {
 
     public String key;
     public String value;
     public Long expireTime;
 
-    public CachKey(String key,String value,Long expireTime) {
+    public CacheKey(String key, String value, Long expireTime) {
         this.key = key;
         this.value = value;
         this.expireTime = expireTime;
     }
-    public CachKey(String key,String value) {
+    public CacheKey(String key, String value) {
         this(key, value, null);
     }
     public String getKey() {

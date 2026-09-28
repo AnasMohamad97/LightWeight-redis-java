@@ -9,7 +9,7 @@ public class LrangeCommand implements Command {
             return;
         }
         String key = args[1];
-        ArrayList<CachKey> list = ctx.listKeyMap().get(key);
+        ArrayList<CacheKey> list = ctx.listKeyMap().get(key);
         if(list == null) {
             ctx.encoder().writeArrayHeader(0).flush();
             return;
@@ -25,8 +25,8 @@ public class LrangeCommand implements Command {
         }
         end = Math.min(end+1,size);
         ctx.encoder().writeArrayHeader(end-start).flush();
-         for (CachKey cachKey : list.subList(start,end)) {
-             ctx.encoder().WriteBulkString(cachKey.getValue());
+         for (CacheKey cacheKey : list.subList(start,end)) {
+             ctx.encoder().WriteBulkString(cacheKey.getValue());
          }
          ctx.encoder().flush();
     }
