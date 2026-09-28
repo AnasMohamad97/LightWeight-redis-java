@@ -2,6 +2,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class RespEncoder {
 
@@ -15,14 +16,12 @@ public class RespEncoder {
     private static final char BULK_STRING = '$';
     private static final char ARRAY = '*';
 
-    private OutputStream out;
+    private final OutputStream out;
 
     public RespEncoder(OutputStream out) {
         this.out = out;
     }
-    void setOutputStream(OutputStream out) {
-        this.out = out;
-    }
+
     public RespEncoder writeSimpleString(String str) throws IOException {
         out.write(SIMPLE_STRING);
         out.write(str.getBytes(StandardCharsets.UTF_8));
@@ -76,13 +75,23 @@ public class RespEncoder {
         out.flush();
         return this;
     }
-    public RespEncoder WriteBulkArray(String... values) throws IOException {
+    public RespEncoder WriteBulkArray(String...values) throws IOException {
         if(values == null) {
             return writeNullBulkString();
         }
         writeArrayHeader(values.length);
         for(String value : values) {
             WriteBulkString(value);
+        }
+        return this;
+    }
+    public RespEncoder WriteBulkArray(List<CachKey> values) throws IOException {
+        if(values == null) {
+            return writeNullBulkString();
+        }
+        writeArrayHeader(values.size());
+        for(CachKey value : values) {
+            WriteBulkString(value.value);
         }
         return this;
     }
