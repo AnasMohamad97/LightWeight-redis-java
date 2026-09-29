@@ -27,6 +27,7 @@ public class CommandRegistry {
 
     public static CommandRegistry defaultRegistry() {
         return new CommandRegistry()
+                .register("LPUSH", new LpushCommand())
                 .register("PING", new PingCommand())
                 .register("ECHO", new EchoCommand())
                 .register("COMMAND", new CommandCommand())
@@ -34,6 +35,7 @@ public class CommandRegistry {
                 .register("GET", new GetCommand())
                 .register("RPUSH", new RpushCommand())
                 .register("LRANGE", new LrangeCommand());
+
     }
 }
 

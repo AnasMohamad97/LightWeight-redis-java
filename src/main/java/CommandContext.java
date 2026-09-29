@@ -6,6 +6,7 @@ public class CommandContext {
     private final HashMap<String, CacheKey> keyValueMap;
     private final HashMap<String, ArrayList<CacheKey>> listKeyMap;
 
+
     public CommandContext(RespEncoder encoder,
                           HashMap<String, CacheKey> keyValueMap,
                           HashMap<String, ArrayList<CacheKey>> listKeyMap) {
