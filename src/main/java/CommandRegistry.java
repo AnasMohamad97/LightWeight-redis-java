@@ -27,6 +27,7 @@ public class CommandRegistry {
 
     public static CommandRegistry defaultRegistry() {
         return new CommandRegistry()
+                .register("LPOP", new LpopCommand())
                 .register("LLEN" , new LlenCommand())
                 .register("LPUSH", new LpushCommand())
                 .register("PING", new PingCommand())
