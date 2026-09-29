@@ -13,8 +13,8 @@ public class LpushCommand implements Command {
         ArrayList<CacheKey> list = ctx.listKeyMap()
                 .computeIfAbsent(key, k -> new ArrayList<>());
 
-        for(int i = args.length-1 ; i >=2; i--) {
-            list.add(new CacheKey(args[i], args[i]));
+        for(int i = 2 ; i < args.length; i++) {
+            list.addFirst(new CacheKey(args[i], args[i]));
         }
         ctx.encoder().WriteInteger(list.size()).flush();
 
