@@ -7,7 +7,7 @@ public class LpopCommand implements Command {
 
     @Override
     public void execute(String[] args, CommandContext ctx) throws IOException {
-        if (args.length != 2) {
+        if (args.length < 2) {
             ctx.encoder().errWrongNumArgs(args[0]);
             return;
         }
@@ -18,12 +18,14 @@ public class LpopCommand implements Command {
             ctx.encoder().flush();
             return;
         }
-        CacheKey cacheKey = list.getFirst();
-        list.removeFirst();
-        ctx.listKeyMap().put(key,list);
-        if (cacheKey != null) {
-            ctx.encoder().WriteBulkString(cacheKey.value);
-            ctx.encoder().flush();
+        int bound = args.length==2 ?1:Integer.parseInt(args[2]);
+        bound = Math.min(bound, list.size());
+        ArrayList<CacheKey> removed = new ArrayList<>(bound);
+        for (int i = 0; i < bound; i++) {
+            removed.add(list.getFirst());
+            list.removeFirst();
         }
+        ctx.encoder().WriteBulkArray(removed);
+        ctx.listKeyMap().put(key,list);
     }
 }
