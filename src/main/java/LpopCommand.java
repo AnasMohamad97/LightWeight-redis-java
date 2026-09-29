@@ -25,7 +25,12 @@ public class LpopCommand implements Command {
             removed.add(list.getFirst());
             list.removeFirst();
         }
-        ctx.encoder().WriteBulkArray(removed);
         ctx.listKeyMap().put(key,list);
+
+        if(bound==1) {
+            ctx.encoder().WriteBulkString(removed.getFirst().value);
+            return;
+        }
+        ctx.encoder().WriteBulkArray(removed);
     }
 }
