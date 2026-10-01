@@ -18,6 +18,8 @@ public class Main {
 
         ExecutorService threadPool = Executors.newCachedThreadPool();
         CommandRegistry commandRegistry = CommandRegistry.defaultRegistry();
+        Database database = new Database();
+
 
          try {
              serverSocket = new ServerSocket(port);
@@ -27,7 +29,7 @@ public class Main {
              while (!Thread.currentThread().isInterrupted()) {
 
                Socket clientSocket = serverSocket.accept();
-              threadPool.submit(new ConnectionHandler(clientSocket,commandRegistry));
+              threadPool.submit(new ConnectionHandler(clientSocket,commandRegistry,database));
           }
         } catch (IOException e) {
           System.out.println("IOException: " + e.getMessage());

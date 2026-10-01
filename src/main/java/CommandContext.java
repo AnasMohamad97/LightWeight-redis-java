@@ -3,19 +3,14 @@ import java.util.HashMap;
 
 public class CommandContext {
     private final RespEncoder encoder;
-    private final HashMap<String, CacheKey> keyValueMap;
-    private final HashMap<String, ArrayList<CacheKey>> listKeyMap;
+    private final Database database;
 
-
-    public CommandContext(RespEncoder encoder,
-                          HashMap<String, CacheKey> keyValueMap,
-                          HashMap<String, ArrayList<CacheKey>> listKeyMap) {
+    public CommandContext(RespEncoder encoder, Database database) {
         this.encoder = encoder;
-        this.keyValueMap = keyValueMap;
-        this.listKeyMap = listKeyMap;
+        this.database = database;
+
     }
 
     public RespEncoder encoder() { return encoder; }
-    public HashMap<String, CacheKey> keyValueMap() { return keyValueMap; }
-    public HashMap<String, ArrayList<CacheKey>> listKeyMap() { return listKeyMap; }
-}
+    public Database database() { return database; }
+   }

@@ -4,9 +4,8 @@ public class SetCommand implements Command {
     @Override
     public void execute(String[] args, CommandContext ctx) throws IOException {
         if(args.length == 3) {
-           CacheKey cacheKey = new CacheKey(args[1],args[2]);
-           ctx.keyValueMap().put(args[1], cacheKey);
-           ctx.encoder().ok();
+            ctx.database().set(args[1],args[2],null);
+            ctx.encoder().ok();
         }else if(args.length == 5) {
             long expiryTime = (args[3].equalsIgnoreCase("PX"))?Long.parseLong(args[4]):(args[3].equalsIgnoreCase("EX"))?Long.parseLong(args[4])*1000:-1;
 
@@ -15,8 +14,7 @@ public class SetCommand implements Command {
                 return;
             }
             long timeLimit =  expiryTime+ System.currentTimeMillis();
-            CacheKey newCachedValue = new CacheKey(args[1],args[2] , timeLimit);
-            ctx.keyValueMap().put(args[1], newCachedValue);
+            ctx.database().set(args[1],args[2],timeLimit);
             ctx.encoder().ok();
         }else {
             ctx.encoder().errWrongNumArgs(args[0].toLowerCase()).flush();

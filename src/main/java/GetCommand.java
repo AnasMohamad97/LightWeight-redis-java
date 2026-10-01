@@ -7,8 +7,6 @@ public class GetCommand implements Command {
             ctx.encoder().errWrongNumArgs(args[0].toLowerCase());
             return;
         }
-        CacheKey entry = ctx.keyValueMap().get(args[1]);
-        String value = (entry == null) ? null : entry.getValue();
-        ctx.encoder().WriteBulkString(value).flush();
+        ctx.encoder().WriteBulkString(ctx.database().get(args[1])).flush();
     }
 }

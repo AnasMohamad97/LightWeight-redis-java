@@ -7,17 +7,14 @@ import java.util.HashMap;
 
 public class ConnectionHandler implements Runnable {
     private final Socket client ;
-    private final HashMap<String, CacheKey> keyValueMap;
-    private final HashMap<String , ArrayList<CacheKey>>ListKeyMap;
     private OutputStream out;
     private BufferedReader in;
     CommandRegistry commandRegistry;
-    public  ConnectionHandler(Socket client,CommandRegistry commandRegistry) throws IOException {
+    Database database;
+    public  ConnectionHandler(Socket client,CommandRegistry commandRegistry,Database database) throws IOException {
         this.client=client;
-        keyValueMap=new HashMap<>();
-        ListKeyMap=new HashMap<>();
         this.commandRegistry=commandRegistry;
-
+        this.database = database;
       }
     @Override
     public void run() {
@@ -29,7 +26,7 @@ public class ConnectionHandler implements Runnable {
 
             out = client.getOutputStream();
             in = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
-            CommandContext commandContext = new CommandContext(new RespEncoder(out),keyValueMap,ListKeyMap);
+            CommandContext commandContext = new CommandContext(new RespEncoder(out),database);
             String  inputLine;
             while ((inputLine = in.readLine()) != null) {
 

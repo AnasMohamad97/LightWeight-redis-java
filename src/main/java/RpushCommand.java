@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RpushCommand implements Command {
     @Override
@@ -9,10 +11,8 @@ public class RpushCommand implements Command {
             return;
         }
         String listKey = args[1];
-        ArrayList<CacheKey> list = ctx.listKeyMap().computeIfAbsent(listKey, k -> new ArrayList<>());
-        for (int i = 2; i < args.length; i++) {
-            list.add(new CacheKey(listKey, args[i]));
-        }
-        ctx.encoder().WriteInteger(list.size()).flush();
+        List<String> list = new ArrayList<>(Arrays.asList(args).subList(2, args.length));
+        int size = ctx.database().rpush(listKey,list);
+        ctx.encoder().WriteInteger(size).flush();
     }
 }

@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class LpushCommand implements Command {
 
@@ -10,14 +12,8 @@ public class LpushCommand implements Command {
             return;
         }
         String key = args[1];
-        ArrayList<CacheKey> list = ctx.listKeyMap()
-                .computeIfAbsent(key, k -> new ArrayList<>());
-
-        for(int i = 2 ; i < args.length; i++) {
-            list.addFirst(new CacheKey(args[i], args[i]));
-        }
-        ctx.encoder().WriteInteger(list.size()).flush();
-
+        List<String> list = new ArrayList<>(Arrays.asList(args).subList(2, args.length));
+        ctx.encoder().WriteInteger(ctx.database().lpush(key, list)).flush();
 
     }
 }

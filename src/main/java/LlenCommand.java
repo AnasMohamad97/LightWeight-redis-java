@@ -9,8 +9,7 @@ public class LlenCommand implements Command {
             return;
         }
         String key = args[1];
-        ArrayList<CacheKey>list = ctx.listKeyMap().getOrDefault(key, new ArrayList<>(0));
-        ctx.encoder().WriteInteger(list.size());
+        ctx.encoder().WriteInteger(ctx.database().llen(key));
         ctx.encoder().flush();
     }
 }

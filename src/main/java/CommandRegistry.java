@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,12 +22,15 @@ public class CommandRegistry {
             command.execute(args, ctx);
         }catch (NumberFormatException e) {
             ctx.encoder().errSyntax();
+        } catch (InterruptedException e) {
+           ctx.encoder().writeError(e.getMessage());
         }
 
     }
 
     public static CommandRegistry defaultRegistry() {
         return new CommandRegistry()
+                .register("BLPOP", new BlpopCommand() {})
                 .register("LPOP", new LpopCommand())
                 .register("LLEN" , new LlenCommand())
                 .register("LPUSH", new LpushCommand())
