@@ -80,7 +80,12 @@ public class Database {
         }else {
           wait(timeoutMillis);
         }
-        return lists.get(key).isEmpty() ? List.of() : lpop(key,1);
+        if(lists.get(key).isEmpty()){
+            return List.of();
+        }
+        List<String> removed = lpop(key, 1);
+        removed.addFirst(key);
+        return removed;
     }
 
 }
