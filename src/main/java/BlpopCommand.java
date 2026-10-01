@@ -10,10 +10,15 @@ public class BlpopCommand implements Command {
             return;
         }
         String key = args[1];
-        List<String> removed = ctx.database().blpop(key,Integer.parseInt(args[2]));
-        if(removed.isEmpty())ctx.encoder().WriteNullArray();
-        ctx.encoder().WriteBulkArray(removed);
-        return;
+         long timeout = (long) (Double.parseDouble(args[2])*1000);
+
+        List<String> removed = ctx.database().blpop(key , timeout);
+        if(removed.isEmpty()){
+            ctx.encoder().WriteNullArray().flush();
+            return;
+        }
+        ctx.encoder().WriteBulkArray(removed).flush();
+
 
     }
 }

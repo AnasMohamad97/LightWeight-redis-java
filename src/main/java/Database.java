@@ -66,16 +66,21 @@ public class Database {
     }
     public synchronized List<String> blpop(String key , long timeoutMillis) throws InterruptedException {
         lists.computeIfAbsent(key,k-> new ArrayList<>());
+
         if(!lists.get(key).isEmpty()){
            return lpop(key,1);
         }
-        while(lists.get(key).isEmpty()) {
-            wait();
-        }
-            List<String>removed = lpop(key,1);
+        if(timeoutMillis == 0) {
+            while (lists.get(key).isEmpty()) {
+                wait();
+            }
+            List<String> removed = lpop(key, 1);
             removed.addFirst(key);
             return removed;
-
+        }else {
+          wait(timeoutMillis);
+        }
+        return lists.get(key).isEmpty() ? List.of() : lpop(key,1);
     }
 
 }
