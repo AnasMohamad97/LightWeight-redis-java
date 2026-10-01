@@ -57,6 +57,7 @@ public class Database {
         end = normalize(end,size);
         if(start >= size || start > end) return List.of();
         end  = Math.min(end + 1 , size); // inclusivity of the ending index
+
         return new ArrayList<>(list.subList(start,end));
 
     }

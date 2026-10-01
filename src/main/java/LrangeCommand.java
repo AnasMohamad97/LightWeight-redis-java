@@ -11,7 +11,6 @@ public class LrangeCommand implements Command {
         }
         String key = args[1];
         int start = Integer.parseInt(args[2]);
-        start = Math.max(start,0);
         int end =Integer.parseInt(args[3]);
         List<String> result = ctx.database().lrange(key,start,end);
 
