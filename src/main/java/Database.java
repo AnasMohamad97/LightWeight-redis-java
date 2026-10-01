@@ -10,8 +10,7 @@ public class Database {
     private final Map<String , List<String>> lists = new HashMap<>();
 
     public String get(String key) {
-        CacheKey entry = strings.get(key);
-        return entry != null ? entry.value : null;
+        return strings.get(key).getValue();
 
     }
     public void set(String key , String value  , Long expiresAtMillis){

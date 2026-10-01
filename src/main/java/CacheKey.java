@@ -1,8 +1,8 @@
 public class CacheKey {
 
-    public String key;
-    public String value;
-    public Long expireTime;
+    private String key;
+    private String value;
+    private Long expireTime;
 
     public CacheKey(String key, String value, Long expireTime) {
         this.key = key;

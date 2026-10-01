@@ -7,6 +7,11 @@ public class GetCommand implements Command {
             ctx.encoder().errWrongNumArgs(args[0].toLowerCase());
             return;
         }
-        ctx.encoder().WriteBulkString(ctx.database().get(args[1])).flush();
+        String result = ctx.database().get(args[1]);
+        if (result == null) {
+            ctx.encoder().writeNullBulkString();
+            return;
+        }
+        ctx.encoder().WriteBulkString(result).flush();
     }
 }
