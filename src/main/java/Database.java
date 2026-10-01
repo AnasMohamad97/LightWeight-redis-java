@@ -71,11 +71,9 @@ public class Database {
            return lpop(key,1);
         }
         if(timeoutMillis == 0) {
-            while (lists.get(key).isEmpty()) {
-                wait();
-            }
+            wait();
             List<String> removed = lpop(key, 1);
-            removed.addFirst(key);
+            if(!removed.isEmpty())removed.addFirst(key);
             return removed;
         }else {
           wait(timeoutMillis);
