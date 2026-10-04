@@ -30,6 +30,7 @@ public class CommandRegistry {
 
     public static CommandRegistry defaultRegistry() {
         return new CommandRegistry()
+                .register("Type", new TypeCommand() {})
                 .register("BLPOP", new BlpopCommand() {})
                 .register("LPOP", new LpopCommand())
                 .register("LLEN" , new LlenCommand())

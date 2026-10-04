@@ -90,5 +90,12 @@ public class Database {
             return  List.of(key,list.removeFirst());
         }
     }
+    public String getType(String key){
+        synchronized (lock) {
+            if(strings.containsKey(key))return "string";
+            else if(lists.containsKey(key))return "list";
+            else return "none";
+        }
+    }
 
 }
