@@ -17,7 +17,7 @@ public class XAddCommand implements Command {
         for(int i = 3; i<args.length-1; i+=2 ){
             ctx.database().setStream(streamKey,entry,args[i],args[i+1]);
         }
-        ctx.encoder().writeSimpleString(streamKey);
+        ctx.encoder().WriteBulkString(streamKey);
         ctx.encoder().flush();
 
     }
