@@ -1,8 +1,10 @@
+package Commands.ListCommands;
+
+import Commands.Command;
+import SharedResources.CommandContext;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
-import java.util.Queue;
 
 public class LpopCommand implements Command {
 

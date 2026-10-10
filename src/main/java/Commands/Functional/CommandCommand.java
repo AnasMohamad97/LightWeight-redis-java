@@ -1,3 +1,8 @@
+package Commands.Functional;
+
+import Commands.Command;
+import SharedResources.CommandContext;
+
 import java.io.IOException;
 
 // redis-cli sends COMMAND on connect; an empty array is enough for it.

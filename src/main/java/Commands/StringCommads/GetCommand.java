@@ -1,3 +1,8 @@
+package Commands.StringCommads;
+
+import Commands.Command;
+import SharedResources.CommandContext;
+
 import java.io.IOException;
 
 public class GetCommand implements Command {

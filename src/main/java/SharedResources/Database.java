@@ -1,3 +1,6 @@
+package SharedResources;
+
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -5,10 +8,22 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Database {
-    private final Map<String,CacheKey> strings = new ConcurrentHashMap<>();
+    private final Map<String, CacheKey> strings = new ConcurrentHashMap<>();
     private final Map<String , List<String>> lists = new HashMap<>();
+    private final ConcurrentHashMap<String,HashMap<String, HashMap<String, String>>> stream = new ConcurrentHashMap<>();
     private final Object lock = new Object();
 
+    public void setStream(String Streamkey,String entry , String key , String value ) {
+        synchronized (lock) {
+            if(!stream.containsKey(Streamkey)) {
+                stream.put(Streamkey, new HashMap<>());
+                stream.get(Streamkey).put(entry,new HashMap<>());
+                stream.get(Streamkey).get(entry).put(key,value);
+            }else {
+                stream.get(Streamkey).get(entry).put(key,value);
+            }
+        }
+    }
     public String get(String key) {
         synchronized (lock) {
             return strings.get(key).getValue();
@@ -94,6 +109,7 @@ public class Database {
         synchronized (lock) {
             if(strings.containsKey(key))return "string";
             else if(lists.containsKey(key))return "list";
+            else if(stream.containsKey(key))return "stream";
             else return "none";
         }
     }

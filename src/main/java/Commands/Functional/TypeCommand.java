@@ -1,6 +1,9 @@
+package Commands.Functional;
+
+import Commands.Command;
+import SharedResources.CommandContext;
+
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 public class TypeCommand implements Command {
     @Override

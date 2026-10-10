@@ -1,5 +1,16 @@
+package Commands;
+
+import Commands.Functional.CommandCommand;
+import Commands.Functional.EchoCommand;
+import Commands.Functional.PingCommand;
+import Commands.Functional.TypeCommand;
+import Commands.StreamCommands.XAddCommand;
+import Commands.StringCommads.GetCommand;
+import Commands.StringCommads.SetCommand;
+import SharedResources.CommandContext;
+import Commands.ListCommands.*;
+
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +41,7 @@ public class CommandRegistry {
 
     public static CommandRegistry defaultRegistry() {
         return new CommandRegistry()
+                .register("XADD", new XAddCommand(){})
                 .register("Type", new TypeCommand() {})
                 .register("BLPOP", new BlpopCommand() {})
                 .register("LPOP", new LpopCommand())

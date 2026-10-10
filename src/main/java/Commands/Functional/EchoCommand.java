@@ -1,3 +1,8 @@
+package Commands.Functional;
+
+import Commands.Command;
+import SharedResources.CommandContext;
+
 import java.io.IOException;
 
 public class EchoCommand implements Command {

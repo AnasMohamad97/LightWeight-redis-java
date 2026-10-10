@@ -1,3 +1,5 @@
+package SharedResources;
+
 public class CacheKey {
 
     private String key;

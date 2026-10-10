@@ -1,3 +1,7 @@
+package Commands;
+
+import SharedResources.CommandContext;
+
 import java.io.IOException;
 
 public interface Command {
