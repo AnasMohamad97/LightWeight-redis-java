@@ -15,10 +15,14 @@ public class Database {
     public void setStream(String Streamkey,String entry , String key , String value ) {
         synchronized (lock) {
             if(!stream.containsKey(Streamkey)) {
+
                 stream.put(Streamkey, new HashMap<>());
                 stream.get(Streamkey).put(entry,new HashMap<>());
                 stream.get(Streamkey).get(entry).put(key,value);
-            }else {
+            }else if(stream.get(Streamkey).containsKey(entry)) {
+                stream.get(Streamkey).get(entry).put(key,value);
+            }else  {
+                stream.get(Streamkey).put(entry,new HashMap<>());
                 stream.get(Streamkey).get(entry).put(key,value);
             }
         }
