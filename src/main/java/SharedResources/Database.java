@@ -12,7 +12,6 @@ public class Database {
     private final Map<String , List<String>> lists = new HashMap<>();
     private final ConcurrentHashMap<String,HashMap<String, HashMap<String, String>>> stream = new ConcurrentHashMap<>();
     private final Object lock = new Object();
-
     public void setStream(String Streamkey,String entry , String key , String value ) {
         synchronized (lock) {
             if(!stream.containsKey(Streamkey)) {
