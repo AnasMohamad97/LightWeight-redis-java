@@ -39,7 +39,7 @@ public class XAddCommand implements Command {
                     (split[1].equalsIgnoreCase("0") )){
 
                 ctx.encoder().writeError("ERR The ID specified in XADD must be greater than 0-0");
-            }else ctx.encoder().writeError(" ERR The ID specified in XADD is equal or smaller than the target stream top item");
+            }else ctx.encoder().writeError("ERR The ID specified in XADD is equal or smaller than the target stream top item");
         }
         return false;
     }
