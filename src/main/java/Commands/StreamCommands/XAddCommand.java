@@ -23,11 +23,14 @@ public class XAddCommand implements Command {
           Integer MilliSeconds = Integer.parseInt(split[0]);
           if(EntryIDs.containsKey(MilliSeconds)){
               entry = entry.replace("*",String.valueOf(EntryIDs.get(MilliSeconds)+1));
+              EntryIDs.replace(MilliSeconds,EntryIDs.get(MilliSeconds)+1);
           }else if(!MilliSeconds.equals(0)){
               entry = entry.replace("*","0");
+              EntryIDs.put(MilliSeconds,0);
 
           }else {
               entry = entry.replace("*","1");
+              EntryIDs.put(MilliSeconds,1);
           }
           for (int i = 3; i < args.length - 1; i += 2) {
               ctx.database().setStream(streamKey, entry, args[i], args[i + 1]);
