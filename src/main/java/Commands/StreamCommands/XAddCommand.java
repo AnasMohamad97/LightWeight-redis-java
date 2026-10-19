@@ -23,7 +23,7 @@ public class XAddCommand implements Command {
           Long newMillisecondsTime = System.currentTimeMillis();
           EntryIDs.put(newMillisecondsTime,0);
           lastMillisecondsTime = newMillisecondsTime;
-          entry = STR."\{String.valueOf(newMillisecondsTime)}-0";
+          entry = newMillisecondsTime+"-0";
           for (int i = 3; i < args.length - 1; i += 2) {
               ctx.database().setStream(streamKey, entry, args[i], args[i + 1]);
           }
