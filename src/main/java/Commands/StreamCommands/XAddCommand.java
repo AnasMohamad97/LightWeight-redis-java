@@ -29,9 +29,14 @@ public class XAddCommand implements Command {
           }else {
               entry = entry.replace("*","1");
           }
+          for (int i = 3; i < args.length - 1; i += 2) {
+              ctx.database().setStream(streamKey, entry, args[i], args[i + 1]);
+          }
+          ctx.encoder().WriteBulkString(entry);
+          ctx.encoder().flush();
 
       }
-      if( validateEntryValue(entry, ctx)) {
+     else  if( validateEntryValue(entry, ctx)) {
           for (int i = 3; i < args.length - 1; i += 2) {
               ctx.database().setStream(streamKey, entry, args[i], args[i + 1]);
           }
@@ -41,13 +46,13 @@ public class XAddCommand implements Command {
     }
     public boolean validateEntryValue(String entry , CommandContext ctx) throws IOException, InterruptedException {
         String[] split = entry.split("-");
-        Integer milliseconds = Integer.parseInt(split[0]);
-        Integer sequenceNumber = Integer.parseInt(split[1]);
-        if(!EntryIDs.containsKey(milliseconds)){
-            EntryIDs.put(milliseconds,sequenceNumber);
+        if(Integer.parseInt(split[0]) > lastMillisecondsTime){
+            lastMillisecondsTime = Integer.parseInt(split[0]);
+            lastSequenceNumber = Integer.parseInt(split[1]);
             return true;
-        }else if(EntryIDs.get(milliseconds) < sequenceNumber){
-            EntryIDs.replace(milliseconds,sequenceNumber);
+        }else if(Integer.parseInt(split[0]) == lastMillisecondsTime &&
+        Integer.parseInt(split[1]) > lastSequenceNumber){
+            lastSequenceNumber = Integer.parseInt(split[1]);
             return true;
         }else {
             if((split[0].equalsIgnoreCase("0")) &&
