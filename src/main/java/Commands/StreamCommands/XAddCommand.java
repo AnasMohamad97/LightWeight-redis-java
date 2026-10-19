@@ -23,9 +23,11 @@ public class XAddCommand implements Command {
           Integer MilliSeconds = Integer.parseInt(split[0]);
           if(EntryIDs.containsKey(MilliSeconds)){
               entry = entry.replace("*",String.valueOf(EntryIDs.get(MilliSeconds)+1));
-          }else {
+          }else if(!MilliSeconds.equals(0)){
               entry = entry.replace("*","0");
 
+          }else {
+              entry = entry.replace("*","1");
           }
 
       }
